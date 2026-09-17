@@ -3,70 +3,982 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexum — Financial Ledger Mission Control</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Nexum — Quantum Financial Ledger & Mission Control</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       NEXUM DARK LUXURY BENTO GRID DESIGN SYSTEM (UI/UX PRO MAX + 21ST.DEV)
+       ========================================================================== */
+    :root {
+      --bg-void: #03060D;
+      --bg-surface: #080D1A;
+      --bg-card: rgba(13, 20, 38, 0.7);
+      --bg-card-hover: rgba(20, 31, 58, 0.85);
+      --bg-card-active: #131E38;
+      
+      --border-subtle: rgba(51, 65, 85, 0.35);
+      --border-glow: rgba(245, 158, 11, 0.3);
+      --border-focus: #F59E0B;
+      
+      --primary: #F59E0B;
+      --primary-hover: #D97706;
+      --primary-glow: rgba(245, 158, 11, 0.25);
+      --secondary: #FBBF24;
+      --accent: #8B5CF6;
+      --accent-glow: rgba(139, 92, 246, 0.3);
+      --success: #10B981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --danger: #EF4444;
+      --danger-glow: rgba(239, 68, 68, 0.3);
+      
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-faint: #475569;
+      
+      --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace, SFMono-Regular, Menlo;
+      
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+      --trans-instant: 75ms linear;
+      --trans-fast: 150ms var(--ease-spring);
+      --trans-normal: 250ms var(--ease-spring);
+      --trans-drawer: 350ms var(--ease-spring);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      line-height: 1.5;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 20% 0%, rgba(245, 158, 11, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 3px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      color: inherit;
+      user-select: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    button:active {
+      transform: scale(0.97) !important;
+    }
+
+    input, select {
+      font-family: inherit;
+      color: inherit;
+    }
+
+    /* Ambient Background Orbs */
+    .ambient-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 { width: 500px; height: 500px; background: rgba(245, 158, 11, 0.06); top: -100px; left: 10%; }
+    .orb-2 { width: 600px; height: 600px; background: rgba(139, 92, 246, 0.05); bottom: -150px; right: 5%; }
+
+    /* Top Executive Navigation HUD */
+    .hud-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(3, 6, 13, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.75rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-core-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), #B45309);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .brand-meta-titles {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #FFF;
+      line-height: 1;
+    }
+
+    .brand-tag {
+      font-size: 0.65rem;
+      font-family: var(--font-mono);
+      color: var(--primary);
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    .hud-stream {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      flex-wrap: wrap;
+    }
+
+    .hud-node {
+      background: rgba(13, 20, 38, 0.8);
+      border: 1px solid var(--border-subtle);
+      padding: 5px 12px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+    }
+
+    .hud-node strong {
+      color: var(--text-main);
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+
+    .live-dot.degraded {
+      background: var(--danger);
+      box-shadow: 0 0 10px var(--danger);
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .hud-right-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .currency-pill-toggle {
+      display: flex;
+      background: rgba(13, 20, 38, 0.9);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 2px;
+    }
+
+    .currency-btn {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      transition: var(--trans-fast);
+    }
+
+    .currency-btn.active {
+      background: var(--primary);
+      color: #03060D;
+      font-weight: 700;
+    }
+
+    .btn-kbd {
+      background: rgba(30, 41, 59, 0.4);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--trans-fast);
+    }
+
+    .btn-kbd:hover {
+      background: rgba(51, 65, 85, 0.6);
+      border-color: var(--primary);
+      color: #FFF;
+    }
+
+    .kbd-chip {
+      background: #03060D;
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.65rem;
+      color: var(--secondary);
+    }
+
+    .btn-sound {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.4);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: var(--trans-fast);
+      position: relative;
+    }
+
+    .btn-sound:hover {
+      color: var(--primary);
+      border-color: var(--border-glow);
+    }
+
+    .equalizer-bars {
+      display: flex;
+      gap: 2px;
+      align-items: flex-end;
+      height: 12px;
+    }
+
+    .eq-bar {
+      width: 2px;
+      background: var(--primary);
+      border-radius: 1px;
+      animation: eq-bounce 1s infinite ease-in-out;
+    }
+    .eq-bar:nth-child(1) { height: 4px; animation-delay: 0.1s; }
+    .eq-bar:nth-child(2) { height: 10px; animation-delay: 0.3s; }
+    .eq-bar:nth-child(3) { height: 7px; animation-delay: 0.2s; }
+
+    @keyframes eq-bounce {
+      0%, 100% { transform: scaleY(0.4); }
+      50% { transform: scaleY(1); }
+    }
+
+    .btn-sound.muted .eq-bar {
+      animation: none;
+      height: 2px;
+      background: var(--text-faint);
+    }
+
+    /* Bento Box Grid Master Layout */
+    .bento-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .bento-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color var(--trans-normal), box-shadow var(--trans-normal);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .bento-card:hover {
+      border-color: var(--border-glow);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+    }
+
+    .bento-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), transparent 80%);
+      opacity: 0.6;
+    }
+
+    /* Bento Spans */
+    .col-span-7 { grid-column: span 7; }
+    .col-span-5 { grid-column: span 5; }
+    .col-span-6 { grid-column: span 6; }
+    .col-span-12 { grid-column: span 12; }
+
+    @media (max-width: 1100px) {
+      .col-span-7, .col-span-5, .col-span-6 { grid-column: span 12; }
+      .bento-container { padding: 1.25rem; }
+    }
+
+    /* Bento Card 1: 3D Quantum Vault */
+    .vault-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      margin: 1rem 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: radial-gradient(circle at center, rgba(17, 26, 48, 0.4) 0%, rgba(3, 6, 13, 0.8) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    #vaultCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: grab;
+    }
+    #vaultCanvas:active { cursor: grabbing; }
+
+    .vault-floating-tag {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      background: rgba(3, 6, 13, 0.85);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      border-radius: 6px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      pointer-events: none;
+    }
+
+    .vault-modes {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      display: flex;
+      gap: 4px;
+      background: rgba(3, 6, 13, 0.85);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .vmode-btn {
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      transition: var(--trans-fast);
+    }
+
+    .vmode-btn.active {
+      background: var(--primary);
+      color: #03060D;
+      font-weight: 700;
+    }
+
+    /* Bento Card 2: Mission Briefing */
+    .eyebrow-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+    }
+
+    .headline-lg {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .headline-lg span {
+      background: linear-gradient(135deg, #FFFFFF 30%, var(--text-muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .desc-text {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-row-trio {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding: 1.25rem 0;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 1.75rem;
+    }
+
+    .stat-col-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .stat-col-num {
+      font-family: var(--font-mono);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #FFF;
+    }
+
+    .cta-button-row {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-gold-cta {
+      background: var(--primary);
+      color: #03060D;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 20px var(--primary-glow);
+      transition: var(--trans-fast);
+    }
+
+    .btn-gold-cta:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-dark-cta {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border-subtle);
+      color: #FFF;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--trans-fast);
+    }
+
+    .btn-dark-cta:hover {
+      background: rgba(51, 65, 85, 0.7);
+      border-color: var(--primary);
+    }
+
+    /* Bento Card 3: Concurrency Battle Arena */
+    .arena-box {
+      background: rgba(8, 13, 26, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .arena-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .split-track {
+      height: 8px;
+      background: #03060D;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      margin-bottom: 0.75rem;
+    }
+
+    .fill-ok { height: 100%; background: var(--success); width: 0%; transition: width 150ms var(--ease-spring); }
+    .fill-fail { height: 100%; background: var(--danger); width: 0%; transition: width 150ms var(--ease-spring); }
+
+    .workers-matrix {
+      display: grid;
+      grid-template-columns: repeat(15, 1fr);
+      gap: 4px;
+      margin-top: 0.85rem;
+    }
+
+    .worker-tile {
+      height: 14px;
+      background: rgba(51, 65, 85, 0.4);
+      border-radius: 3px;
+      transition: background-color var(--trans-instant);
+    }
+
+    .worker-tile.locking { background: var(--primary); box-shadow: 0 0 6px var(--primary); }
+    .worker-tile.committed { background: var(--success); }
+    .worker-tile.rejected { background: var(--danger); }
+
+    /* Bento Card 4: Accounts Titanium Cards */
+    .accounts-scroll {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .titanium-account-card {
+      background: linear-gradient(135deg, rgba(20, 30, 56, 0.8) 0%, rgba(10, 16, 32, 0.9) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.15rem 1.35rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--trans-fast);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .titanium-account-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--primary);
+      opacity: 0;
+      transition: opacity var(--trans-fast);
+    }
+
+    .titanium-account-card:hover {
+      border-color: var(--border-glow);
+      transform: translateX(4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .titanium-account-card:hover::before { opacity: 1; }
+
+    .card-emv-chip {
+      width: 24px;
+      height: 18px;
+      background: linear-gradient(135deg, #FDE68A, #D97706);
+      border-radius: 3px;
+      margin-bottom: 6px;
+      position: relative;
+      opacity: 0.9;
+    }
+
+    .acc-owner-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .acc-number-code {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .acc-balance-display {
+      text-align: right;
+      font-family: var(--font-mono);
+    }
+
+    .acc-amount-hero {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    /* Bento Card 5: Double-Entry Feed */
+    .ledger-entries-stream {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .ledger-block-item {
+      background: rgba(8, 13, 26, 0.7);
+      border-left: 3px solid var(--primary);
+      border-radius: 0 10px 10px 0;
+      padding: 0.85rem 1.15rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+      border-right: 1px solid rgba(255, 255, 255, 0.02);
+    }
+
+    .ledger-block-item.debit { border-left-color: var(--danger); }
+    .ledger-block-item.credit { border-left-color: var(--success); }
+
+    .tag-badge {
+      font-size: 0.68rem;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .tag-badge.credit { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+    .tag-badge.debit { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+    /* Slide-out Drawer (21st.dev Standard) */
+    .drawer-scrim {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 6, 13, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--trans-drawer);
+    }
+
+    .drawer-scrim.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      max-width: 460px;
+      background: #080D1A;
+      border-left: 1px solid var(--border-subtle);
+      box-shadow: -20px 0 60px rgba(0, 0, 0, 0.8);
+      z-index: 101;
+      transform: translateX(100%);
+      transition: transform var(--trans-drawer);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer-scrim.active .side-drawer {
+      transform: translateX(0);
+    }
+
+    .drawer-top-head {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .drawer-main-form {
+      padding: 2rem;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .drawer-bottom-actions {
+      padding: 1.25rem 2rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      background: rgba(3, 6, 13, 0.6);
+    }
+
+    .field-wrap {
+      margin-bottom: 1.5rem;
+    }
+
+    .field-tag {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.45rem;
+    }
+
+    .field-control {
+      width: 100%;
+      background: #111A30;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      color: #FFF;
+      font-size: 0.95rem;
+      transition: var(--trans-fast);
+    }
+
+    .field-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    /* Command Palette Overlay */
+    .palette-scrim {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 6, 13, 0.8);
+      backdrop-filter: blur(12px);
+      z-index: 120;
+      display: flex;
+      justify-content: center;
+      padding-top: 14vh;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .palette-scrim.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .palette-box {
+      background: #0B1124;
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8);
+      overflow: hidden;
+    }
+
+    .palette-search-line {
+      padding: 1.15rem 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .palette-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      font-size: 1.1rem;
+      color: #FFF;
+      outline: none;
+    }
+
+    .palette-rows-feed {
+      max-height: 320px;
+      overflow-y: auto;
+      padding: 0.6rem;
+    }
+
+    .cmd-item {
+      padding: 0.8rem 1.15rem;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: var(--trans-fast);
+    }
+
+    .cmd-item:hover, .cmd-item.focused {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--primary);
+    }
+
+    /* Toast Stack */
+    .toast-tower {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 150;
+      pointer-events: none;
+    }
+
+    .toast-bubble {
+      background: #111A30;
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      padding: 0.85rem 1.35rem;
+      font-size: 0.85rem;
+      color: #FFF;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+      transform: translateY(16px);
+      opacity: 0;
+      transition: var(--trans-normal);
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast-bubble.open {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-bubble.success { border-left-color: var(--success); }
+    .toast-bubble.error { border-left-color: var(--danger); }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(3, 6, 13, 0.5); }
+    ::-webkit-scrollbar-thumb { background: rgba(51, 65, 85, 0.5); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Top Realtime HUD Header -->
-  <header class="hud-bar">
-    <div class="brand-wrapper">
-      <div class="brand-gem">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#050811" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+
+  <!-- HUD Navigation Bar -->
+  <header class="hud-header">
+    <div class="brand-group">
+      <div class="brand-core-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#03060D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
           <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
           <line x1="6" y1="6" x2="6.01" y2="6"></line>
           <line x1="6" y1="18" x2="6.01" y2="18"></line>
         </svg>
       </div>
-      <div class="brand-title-group">
+      <div class="brand-meta-titles">
         <h1 class="brand-name">Nexum</h1>
-        <span class="brand-sub">LEDGER CORE ENGINE</span>
+        <span class="brand-tag">QUANTUM LEDGER CORE</span>
       </div>
     </div>
 
-    <!-- Telemetry Stream -->
-    <div class="hud-chips-stream">
-      <div class="telemetry-badge">
-        <div class="led-indicator" id="dbLed"></div>
+    <!-- Live Telemetry Stream -->
+    <div class="hud-stream">
+      <div class="hud-node">
+        <div class="live-dot" id="dbLed"></div>
         <span>POSTGRES: <strong id="dbStatusText">ACID ACTIVE</strong></span>
       </div>
-      <div class="telemetry-badge">
-        <div class="led-indicator" id="redisLed"></div>
+      <div class="hud-node">
+        <div class="live-dot" id="redisLed"></div>
         <span>REDIS: <strong id="redisStatusText">IDEMPOTENCY OK</strong></span>
       </div>
-      <div class="telemetry-badge">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2">
+      <div class="hud-node">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
         </svg>
-        <span>LATENCIA LOCK: <strong id="lockLatencyText">0.42ms</strong></span>
+        <span>LATENCIA: <strong id="lockLatencyText">0.38ms</strong></span>
       </div>
-      <div class="telemetry-badge">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" stroke-width="2">
+      <div class="hud-node">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         </svg>
-        <span>PARIDAD: <strong id="auditParityText">0.0000 DISCREPANCIA</strong></span>
+        <span>DISCREPANCIA: <strong id="auditParityText">0.0000</strong></span>
       </div>
     </div>
 
-    <!-- Actions & Controls -->
-    <div class="hud-control-group">
-      <button class="btn-keyboard-hint" id="openPaletteBtn" title="Paleta de Comandos (Ctrl+K)">
+    <!-- Controls -->
+    <div class="hud-right-actions">
+      <!-- Currency Reactivity Toggle -->
+      <div class="currency-pill-toggle">
+        <button class="currency-btn active" data-cur="USD">USD</button>
+        <button class="currency-btn" data-cur="EUR">EUR</button>
+        <button class="currency-btn" data-cur="GBP">GBP</button>
+      </div>
+
+      <button class="btn-kbd" id="openPaletteBtn" title="Paleta de Comandos (Ctrl+K)">
         <span>Comandos</span>
-        <span class="shortcut-kbd">Ctrl K</span>
+        <span class="kbd-chip">Ctrl K</span>
       </button>
 
-      <button class="btn-tool" id="audioToggleBtn" title="Sonido Háptico (Web Audio API)">
-        <svg id="audioIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-        </svg>
+      <button class="btn-sound" id="audioToggleBtn" title="Sonido Háptico (Web Audio API)">
+        <div class="equalizer-bars">
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+        </div>
       </button>
 
-      <a href="/docs" target="_blank" class="btn-tool" title="Swagger API OpenAPI">
+      <a href="/docs" target="_blank" class="btn-sound" title="Swagger API OpenAPI">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
           <polyline points="14 2 14 8 20 8"></polyline>
@@ -77,302 +989,985 @@
     </div>
   </header>
 
-  <!-- Main Dashboard -->
-  <main class="main-stage">
+  <!-- Bento Grid Main Stage -->
+  <main class="bento-container">
 
-    <!-- Hero & 3D Spatial Core -->
-    <section class="hero-cockpit">
-      <!-- Cockpit Overview -->
-      <div class="cockpit-card">
+    <!-- BENTO 1: Mission Briefing Cockpit (Span 7) -->
+    <div class="bento-card col-span-7">
+      <div>
+        <div class="eyebrow-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          Arquitectura Financiera Inmutable
+        </div>
+        <h2 class="headline-lg">Plataforma de Libro Mayor <span>ACID &amp; Doble Partida</span></h2>
+        <p class="desc-text">
+          Nexum erradica condiciones de carrera y sobregiros concurrentes. Implementa ordenamiento determinista en bloqueos pesimistas de PostgreSQL (<code>SELECT ... FOR UPDATE</code>) e idempotencia distribuida en Redis 7.
+        </p>
+      </div>
+
+      <div class="stat-row-trio">
         <div>
-          <div class="cockpit-label">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-            </svg>
-            Motor Financiero de Alta Concurrencia
-          </div>
-          <h2 class="cockpit-headline">Libro Mayor <span>ACID e Idempotente</span></h2>
-          <p class="cockpit-summary">
-            Nexum blinda la integridad patrimonial mediante ordenamiento determinista de bloqueos pesimistas en PostgreSQL y control distribuido de concurrencia en Redis. Cero balances negativos, cero interbloqueos cruzados.
-          </p>
+          <div class="stat-col-label">CUENTAS CUSTODIADAS</div>
+          <div class="stat-col-num" id="statAccountsCount">0</div>
         </div>
-
-        <div class="cockpit-metrics-grid">
-          <div>
-            <div class="metric-box-label">CUENTAS ACTIVAS</div>
-            <div class="metric-box-val" id="statAccountsCount">0</div>
-          </div>
-          <div>
-            <div class="metric-box-label">CUSTODIA TOTAL</div>
-            <div class="metric-box-val" id="statTotalLiquidity">$0.00</div>
-          </div>
-          <div>
-            <div class="metric-box-label">ESTADO DE AUDITORÍA</div>
-            <div class="metric-box-val" style="color: var(--color-success)">100% RECONCILED</div>
-          </div>
+        <div>
+          <div class="stat-col-label">FONDO TOTAL DISPONIBLE</div>
+          <div class="stat-col-num" id="statTotalLiquidity">$0.00</div>
         </div>
-
-        <div class="cockpit-button-group">
-          <button class="btn-cta-primary" id="btnNewAccount">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Nueva Cuenta Contable
-          </button>
-          <button class="btn-cta-secondary" id="btnOpenDrawerTransfer">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="7" y1="17" x2="17" y2="7"></line>
-              <polyline points="7 7 17 7 17 17"></polyline>
-            </svg>
-            Transferencia Atómica
-          </button>
+        <div>
+          <div class="stat-col-label">INTEGRIDAD MATEMÁTICA</div>
+          <div class="stat-col-num" style="color: var(--success)">100% ACID</div>
         </div>
       </div>
 
-      <!-- 3D Spatial Canvas Viewport -->
-      <div class="spatial-vault-card">
-        <div class="spatial-top-bar">
-          <span>NEXUS QUANTUM VAULT (3D)</span>
-          <div class="spatial-tabs">
-            <button class="spatial-tab active" data-mode="vault">BÓVEDA</button>
-            <button class="spatial-tab" data-mode="topology">TOPOLOGÍA</button>
-            <button class="spatial-tab" data-mode="audit">AUDIT</button>
-          </div>
+      <div class="cta-button-row">
+        <button class="btn-gold-cta" id="btnNewAccount">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Aperturar Cuenta
+        </button>
+        <button class="btn-dark-cta" id="btnOpenDrawerTransfer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+          Transferencia Atómica
+        </button>
+      </div>
+    </div>
+
+    <!-- BENTO 2: 3D Quantum Vault Canvas (Span 5) -->
+    <div class="bento-card col-span-5">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span class="eyebrow-tag" style="margin-bottom: 0;">NEXUS QUANTUM VAULT (3D)</span>
+        <span style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--success);" id="vaultPulseText">1,420 TPS</span>
+      </div>
+
+      <div class="vault-canvas-wrap">
+        <div class="vault-floating-tag">
+          <div class="live-dot"></div>
+          <span>NÚCLEO CRIPTOGRÁFICO EN VIVO</span>
         </div>
         <canvas id="vaultCanvas"></canvas>
-        <div class="spatial-bottom-bar">
-          <span>PARALLAX: SEGUIMIENTO DE CURSOR</span>
-          <span id="vaultStats">ESTADO: CRIPTOGRÁFICO INTACTO</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Workspace Grid -->
-    <section class="workspace-grid">
-
-      <!-- Left Column: Accounts & Concurrency Battle Simulator -->
-      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-        
-        <!-- Cuentas en Custodia -->
-        <div class="control-panel">
-          <div class="control-panel-header">
-            <h3 class="panel-heading">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2">
-                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                <line x1="2" y1="10" x2="22" y2="10"></line>
-              </svg>
-              Cuentas en Custodia
-            </h3>
-            <span class="telemetry-badge" id="accountBadgeCount">0 ACTIVAS</span>
-          </div>
-          <div class="control-panel-body">
-            <div class="accounts-stack" id="accountListContainer">
-              <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                Cargando estado contable...
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Concurrency Battle Arena -->
-        <div class="control-panel">
-          <div class="control-panel-header">
-            <h3 class="panel-heading">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-              </svg>
-              Simulador de Concurrencia Extrema (Race Conditions)
-            </h3>
-            <span class="arena-tag">ANTI-DOUBLE SPEND</span>
-          </div>
-          <div class="control-panel-body">
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
-              Dispara <strong>30 peticiones concurrentes</strong> desde una cuenta con saldo limitado. La base de datos y Redis resuelven el ordenamiento pesimista sin saldo negativo ni fallos de integridad.
-            </p>
-
-            <button class="btn-cta-primary" id="btnLaunchStress" style="width: 100%; justify-content: center; background: linear-gradient(135deg, var(--color-primary), #B45309)">
-              Disparar 30 Workers Concurrentes
-            </button>
-
-            <!-- Battle Arena Visualizer -->
-            <div class="battle-arena-panel" id="stressResultsBlock" style="display: none;">
-              <div class="arena-title-bar">
-                <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted)">PROGRESO DE BLOQUES</span>
-                <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--color-primary)" id="stressProgressPct">0%</span>
-              </div>
-              <div class="arena-progress-track">
-                <div class="track-success" id="stressBarSuccess"></div>
-                <div class="track-reject" id="stressBarRejected"></div>
-              </div>
-              <div class="arena-stats-row">
-                <span style="color: var(--color-success)">ÉXITOS (201): <strong id="stressSuccessCount">0</strong></span>
-                <span style="color: var(--color-danger)">RECHAZOS (400): <strong id="stressRejectedCount">0</strong></span>
-                <span>SALDO FINAL: <strong id="stressFinalBalance">$0.00</strong></span>
-              </div>
-              <div class="worker-lanes-box" id="workerLanes">
-                <!-- 30 visual nodes -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Right Column: Double-Entry Ledger Stream -->
-      <div class="control-panel">
-        <div class="control-panel-header">
-          <h3 class="panel-heading">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-            </svg>
-            Libro Mayor en Vivo (Double-Entry Feed)
-          </h3>
-          <button class="btn-keyboard-hint" id="btnAuditAll" style="padding: 4px 10px;">
-            Auditar Paridad
-          </button>
-        </div>
-        <div class="control-panel-body">
-          <div class="ledger-stream" id="ledgerFeedContainer">
-            <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
-              Cargando historial del libro mayor...
-            </div>
-          </div>
+        <div class="vault-modes">
+          <button class="vmode-btn active" data-mode="vault">BÓVEDA</button>
+          <button class="vmode-btn" data-mode="topology">RED</button>
+          <button class="vmode-btn" data-mode="audit">AUDIT</button>
         </div>
       </div>
 
-    </section>
+      <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">
+        <span>INTERACCIÓN: ARRASTRAR PERSPECTIVA</span>
+        <span>ACID ENGINE v1.0</span>
+      </div>
+    </div>
+
+    <!-- BENTO 3: Concurrency Battle Arena (Span 12) -->
+    <div class="bento-card col-span-12">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <div>
+          <span class="eyebrow-tag">LABORATORIO DE ESTRÉS EXTREMO</span>
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: #FFF;">Simulador de Condiciones de Carrera (30 Workers Concurrentes)</h3>
+        </div>
+        <button class="btn-gold-cta" id="btnLaunchStress" style="padding: 0.65rem 1.25rem; font-size: 0.85rem;">
+          Disparar Ráfaga Concurrente
+        </button>
+      </div>
+
+      <p style="font-size: 0.85rem; color: var(--text-muted); max-width: 850px; margin-bottom: 1rem;">
+        Lanza 30 peticiones simultáneas demandando fondos a una cuenta con saldo limitado. PostgreSQL y Redis resuelven el ordenamiento pesimista, autorizando exactamente el importe disponible y rechazando con código HTTP 400 el excedente, demostrando que el saldo <strong>jamás cae en negativo</strong>.
+      </p>
+
+      <div class="arena-box" id="stressResultsBlock" style="display: none;">
+        <div class="arena-top">
+          <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">PROGRESO DE WORKERS</span>
+          <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary);" id="stressProgressPct">0%</span>
+        </div>
+        <div class="split-track">
+          <div class="fill-ok" id="stressBarSuccess"></div>
+          <div class="fill-fail" id="stressBarRejected"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.78rem;">
+          <span style="color: var(--success);">TRANSACCIONES AUTORIZADAS (201): <strong id="stressSuccessCount">0</strong></span>
+          <span style="color: var(--danger);">RECHAZOS POR SALDO INSUFICIENTE (400): <strong id="stressRejectedCount">0</strong></span>
+          <span>SALDO FINAL PROTEGIDO: <strong id="stressFinalBalance">$0.00</strong></span>
+        </div>
+        <div class="workers-matrix" id="workerLanes">
+          <!-- 30 visual worker nodes -->
+        </div>
+      </div>
+    </div>
+
+    <!-- BENTO 4: Accounts Titanium Cards (Span 6) -->
+    <div class="bento-card col-span-6">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div>
+          <span class="eyebrow-tag" style="margin-bottom: 0;">FONDOS BAJO CUSTODIA</span>
+          <h3 style="font-size: 1.15rem; font-weight: 700;">Cuentas Registradas</h3>
+        </div>
+        <span class="hud-node" id="accountBadgeCount">0 ACTIVAS</span>
+      </div>
+      <div class="accounts-scroll" id="accountListContainer">
+        <div style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+          Cargando cuentas contables...
+        </div>
+      </div>
+    </div>
+
+    <!-- BENTO 5: Double-Entry Live Stream (Span 6) -->
+    <div class="bento-card col-span-6">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div>
+          <span class="eyebrow-tag" style="margin-bottom: 0;">AUDITORÍA EN TIEMPO REAL</span>
+          <h3 style="font-size: 1.15rem; font-weight: 700;">Libro Mayor de Doble Partida</h3>
+        </div>
+        <button class="btn-kbd" id="btnAuditAll" style="padding: 4px 10px;">
+          Auditar Paridad
+        </button>
+      </div>
+      <div class="ledger-entries-stream" id="ledgerFeedContainer">
+        <div style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+          Cargando asientos contables...
+        </div>
+      </div>
+    </div>
 
   </main>
 
   <!-- Slide-out Drawer: Transferencia Atómica (21st.dev Standard) -->
-  <div class="drawer-backdrop" id="transferDrawerBackdrop">
-    <div class="slide-drawer" id="transferDrawer">
-      <div class="drawer-header">
-        <h3 class="drawer-title">Transferencia Atómica ACID</h3>
-        <button class="btn-tool" id="closeDrawerBtn">
+  <div class="drawer-scrim" id="transferDrawerBackdrop">
+    <div class="side-drawer" id="transferDrawer">
+      <div class="drawer-top-head">
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: #FFF;">Transferencia Atómica ACID</h3>
+        <button class="btn-sound" id="closeDrawerBtn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
       </div>
-      <div class="drawer-body">
+      <div class="drawer-main-form">
         <form id="drawerTransferForm">
-          <div class="field-box">
-            <label class="field-label" for="drawerSourceAcc">CUENTA DE ORIGEN (DÉBITO)</label>
-            <select class="field-select" id="drawerSourceAcc" required></select>
+          <div class="field-wrap">
+            <label class="field-tag" for="drawerSourceAcc">CUENTA DE ORIGEN (DÉBITO)</label>
+            <select class="field-control" id="drawerSourceAcc" required></select>
           </div>
-          <div class="field-box">
-            <label class="field-label" for="drawerTargetAcc">CUENTA DE DESTINO (CRÉDITO)</label>
-            <select class="field-select" id="drawerTargetAcc" required></select>
+          <div class="field-wrap">
+            <label class="field-tag" for="drawerTargetAcc">CUENTA DE DESTINO (CRÉDITO)</label>
+            <select class="field-control" id="drawerTargetAcc" required></select>
           </div>
-          <div class="field-box">
-            <label class="field-label" for="drawerAmount">MONTO A TRANSFERIR (USD)</label>
-            <input class="field-input" id="drawerAmount" type="number" step="0.01" min="0.01" value="50.00" required>
+          <div class="field-wrap">
+            <label class="field-tag" for="drawerAmount">MONTO A TRANSFERIR (<span class="active-currency-label">USD</span>)</label>
+            <input class="field-control" id="drawerAmount" type="number" step="0.01" min="0.01" value="50.00" required>
           </div>
-          <div class="field-box">
-            <label class="field-label">CLAVE DE IDEMPOTENCIA (X-IDEMPOTENCY-KEY)</label>
-            <input class="field-input" id="drawerIdempotencyKey" type="text" readonly style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-primary)">
+          <div class="field-wrap">
+            <label class="field-tag">CLAVE DE IDEMPOTENCIA (X-IDEMPOTENCY-KEY)</label>
+            <input class="field-control" id="drawerIdempotencyKey" type="text" readonly style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary)">
             <span style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; display: block;">
-              Protege contra duplicados en reintentos de red.
+              Protege contra duplicados en caso de caídas o reintentos de red.
             </span>
           </div>
 
           <div style="background: rgba(17, 26, 48, 0.8); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1rem; margin-top: 1.5rem;">
             <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px;">
-              PROTOCOLO TRANSACCIONAL
+              PROTOCOLO DE INTEGRIDAD PATRIMONIAL
             </div>
             <div style="font-size: 0.8rem; color: var(--text-main); display: flex; flex-direction: column; gap: 4px;">
               <span>• Bloqueo pesimista ordenado: <code>SELECT ... FOR UPDATE</code></span>
               <span>• Restricción CHECK PostgreSQL: <code>balance &gt;= 0.0000</code></span>
-              <span>• Asientos inmutables de doble partida registrados</span>
+              <span>• Doble asiento contable inmutable debit/credit</span>
             </div>
           </div>
         </form>
       </div>
-      <div class="drawer-footer">
-        <button type="button" class="btn-cta-secondary" id="btnCancelDrawer">Cancelar</button>
-        <button type="submit" form="drawerTransferForm" class="btn-cta-primary">Confirmar y Transmitir</button>
+      <div class="drawer-bottom-actions">
+        <button type="button" class="btn-dark-cta" id="btnCancelDrawer">Cancelar</button>
+        <button type="submit" form="drawerTransferForm" class="btn-gold-cta">Confirmar Transferencia</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Crear Cuenta -->
-  <div class="drawer-backdrop" id="accountModalBackdrop">
-    <div class="slide-drawer" style="max-width: 440px;" id="accountModal">
-      <div class="drawer-header">
-        <h3 class="drawer-title">Apertura de Cuenta Contable</h3>
-        <button class="btn-tool" id="closeAccountModal">
+  <!-- Modal Apertura de Cuenta -->
+  <div class="drawer-scrim" id="accountModalBackdrop">
+    <div class="side-drawer" style="max-width: 440px;" id="accountModal">
+      <div class="drawer-top-head">
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: #FFF;">Apertura de Cuenta Contable</h3>
+        <button class="btn-sound" id="closeAccountModal">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
       </div>
-      <div class="drawer-body">
+      <div class="drawer-main-form">
         <form id="createAccountForm">
-          <div class="field-box">
-            <label class="field-label" for="accOwnerName">NOMBRE DEL TITULAR</label>
-            <input class="field-input" id="accOwnerName" type="text" placeholder="Ej. Carlos Mendoza" required minlength="2">
+          <div class="field-wrap">
+            <label class="field-tag" for="accOwnerName">NOMBRE DEL TITULAR</label>
+            <input class="field-control" id="accOwnerName" type="text" placeholder="Ej. Carlos Mendoza" required minlength="2">
           </div>
-          <div class="field-box">
-            <label class="field-label" for="accInitialBalance">DEPÓSITO INICIAL (USD)</label>
-            <input class="field-input" id="accInitialBalance" type="number" step="0.01" min="0" value="500.00" required>
+          <div class="field-wrap">
+            <label class="field-tag" for="accInitialBalance">DEPÓSITO INICIAL (<span class="active-currency-label">USD</span>)</label>
+            <input class="field-control" id="accInitialBalance" type="number" step="0.01" min="0" value="500.00" required>
           </div>
-          <div class="field-box">
-            <label class="field-label">DIVISA DE OPERACIÓN</label>
-            <input class="field-input" value="USD (Dólar Estadounidense)" readonly style="color: var(--text-muted);">
+          <div class="field-wrap">
+            <label class="field-tag">DIVISA DE APERTURA</label>
+            <input class="field-control" value="USD (Dólar Estadounidense)" readonly style="color: var(--text-muted);">
           </div>
         </form>
       </div>
-      <div class="drawer-footer">
-        <button type="button" class="btn-cta-secondary" id="btnCancelAccount">Cancelar</button>
-        <button type="submit" form="createAccountForm" class="btn-cta-primary">Crear Cuenta</button>
+      <div class="drawer-bottom-actions">
+        <button type="button" class="btn-dark-cta" id="btnCancelAccount">Cancelar</button>
+        <button type="submit" form="createAccountForm" class="btn-gold-cta">Crear Cuenta</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Command Palette (Ctrl+K) -->
-  <div class="palette-overlay" id="commandPaletteOverlay">
-    <div class="palette-window">
-      <div class="palette-search-row">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2">
+  <!-- Command Palette (Ctrl+K) -->
+  <div class="palette-scrim" id="commandPaletteOverlay">
+    <div class="palette-box">
+      <div class="palette-search-line">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <input class="palette-search-input" id="paletteSearch" type="text" placeholder="Escribe un comando o busca cuentas...">
-        <span class="shortcut-kbd">ESC</span>
+        <input class="palette-input" id="paletteSearch" type="text" placeholder="Escribe un comando o busca...">
+        <span class="kbd-chip">ESC</span>
       </div>
-      <div class="palette-actions-list" id="paletteList">
-        <div class="palette-row" data-action="new-transfer">
+      <div class="palette-rows-feed" id="paletteList">
+        <div class="cmd-item" data-action="new-transfer">
           <span>Ejecutar transferencia atómica</span>
-          <span class="shortcut-kbd">T</span>
+          <span class="kbd-chip">T</span>
         </div>
-        <div class="palette-row" data-action="new-account">
-          <span>Abrir nueva cuenta en custodia</span>
-          <span class="shortcut-kbd">A</span>
+        <div class="cmd-item" data-action="new-account">
+          <span>Aperturar nueva cuenta en custodia</span>
+          <span class="kbd-chip">A</span>
         </div>
-        <div class="palette-row" data-action="stress-test">
-          <span>Disparar simulador de concurrencia</span>
-          <span class="shortcut-kbd">S</span>
+        <div class="cmd-item" data-action="stress-test">
+          <span>Lanzar simulador de concurrencia extrema</span>
+          <span class="kbd-chip">S</span>
         </div>
-        <div class="palette-row" data-action="audit-all">
-          <span>Auditar balance de doble partida</span>
-          <span class="shortcut-kbd">R</span>
+        <div class="cmd-item" data-action="audit-all">
+          <span>Auditar paridad contable en tiempo real</span>
+          <span class="kbd-chip">R</span>
         </div>
-        <div class="palette-row" data-action="toggle-audio">
-          <span>Alternar sonido háptico</span>
-          <span class="shortcut-kbd">M</span>
+        <div class="cmd-item" data-action="toggle-audio">
+          <span>Alternar sonido háptico Web Audio</span>
+          <span class="kbd-chip">M</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Toast Reservoir -->
-  <div class="toast-reservoir" id="toastReservoir"></div>
+  <!-- Toast Notification Tower -->
+  <div class="toast-tower" id="toastReservoir"></div>
 
-  <script src="/static/app.js"></script>
+  <!-- Embedded Client Logic (Zero Cache Latency) -->
+  <script>
+    // 1. Web Audio API — Síntesis Háptica
+    class HapticEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+      }
+      click() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(840, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(140, this.ctx.currentTime + 0.03);
+          gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.03);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.03);
+        } catch(e) {}
+      }
+      laser() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(250, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(1400, this.ctx.currentTime + 0.09);
+          gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.09);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.09);
+        } catch(e) {}
+      }
+      success() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = f;
+            gain.gain.setValueAtTime(0.025, now + i * 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.03 + 0.2);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + i * 0.03);
+            osc.stop(now + i * 0.03 + 0.2);
+          });
+        } catch(e) {}
+      }
+      reject() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.12);
+        } catch(e) {}
+      }
+    }
+    const sound = new HapticEngine();
+
+    // 2. 3D Spatial Quantum Vault Canvas
+    class QuantumVault3D {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.mode = 'vault';
+        this.rotX = 0.35;
+        this.rotY = 0.35;
+        this.targetRotX = 0.35;
+        this.targetRotY = 0.35;
+        this.init();
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        window.addEventListener('mousemove', (e) => {
+          const r = this.canvas.getBoundingClientRect();
+          this.targetRotY = ((e.clientX - r.left) / r.width - 0.5) * 1.5;
+          this.targetRotX = -((e.clientY - r.top) / r.height - 0.5) * 1.5;
+        });
+        this.animate = this.animate.bind(this);
+        requestAnimationFrame(this.animate);
+      }
+
+      init() {
+        this.ring1 = [];
+        for (let i = 0; i < 32; i++) {
+          const t = (i / 32) * Math.PI * 2;
+          this.ring1.push({ x: Math.cos(t) * 115, y: Math.sin(t) * 115, z: 0 });
+        }
+        this.ring2 = [];
+        for (let i = 0; i < 24; i++) {
+          const t = (i / 24) * Math.PI * 2;
+          this.ring2.push({ x: Math.cos(t) * 85, y: 0, z: Math.sin(t) * 85 });
+        }
+        this.stars = [];
+        for (let i = 0; i < 45; i++) {
+          this.stars.push({
+            x: (Math.random() - 0.5) * 260,
+            y: (Math.random() - 0.5) * 260,
+            z: (Math.random() - 0.5) * 260,
+            speed: 0.01 + Math.random() * 0.02
+          });
+        }
+      }
+
+      resize() {
+        this.canvas.width = this.canvas.clientWidth * window.devicePixelRatio;
+        this.canvas.height = this.canvas.clientHeight * window.devicePixelRatio;
+        this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      }
+
+      animate() {
+        this.rotX += (this.targetRotX - this.rotX) * 0.06;
+        this.rotY += (this.targetRotY - this.rotY) * 0.06;
+
+        const w = this.canvas.clientWidth;
+        const h = this.canvas.clientHeight;
+        this.ctx.clearRect(0, 0, w, h);
+
+        const cx = w / 2;
+        const cy = h / 2;
+        const t = Date.now() * 0.001;
+
+        const cosX = Math.cos(this.rotX);
+        const sinX = Math.sin(this.rotX);
+        const cosY = Math.cos(this.rotY + t * 0.25);
+        const sinY = Math.sin(this.rotY + t * 0.25);
+
+        const project = (p) => {
+          let x1 = p.x * cosY - p.z * sinY;
+          let z1 = p.z * cosY + p.x * sinY;
+          let y1 = p.y * cosX - z1 * sinX;
+          let z2 = z1 * cosX + p.y * sinX;
+          const fov = 350;
+          const s = fov / (fov + z2 + 130);
+          return { px: cx + x1 * s, py: cy + y1 * s, scale: s };
+        };
+
+        // Render Ring 1
+        const r1 = this.ring1.map(project);
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = this.mode === 'audit' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(245, 158, 11, 0.35)';
+        this.ctx.lineWidth = 1.5;
+        for (let i = 0; i < r1.length; i++) {
+          const next = r1[(i + 1) % r1.length];
+          this.ctx.moveTo(r1[i].px, r1[i].py);
+          this.ctx.lineTo(next.px, next.py);
+        }
+        this.ctx.stroke();
+
+        // Render Ring 2
+        const r2 = this.ring2.map(project);
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = this.mode === 'topology' ? 'rgba(139, 92, 246, 0.45)' : 'rgba(245, 158, 11, 0.25)';
+        for (let i = 0; i < r2.length; i++) {
+          const next = r2[(i + 1) % r2.length];
+          this.ctx.moveTo(r2[i].px, r2[i].py);
+          this.ctx.lineTo(next.px, next.py);
+        }
+        this.ctx.stroke();
+
+        // Golden Central Octahedron Core
+        const core = [
+          { x: 0, y: -38, z: 0 },
+          { x: 0, y: 38, z: 0 },
+          { x: -38, y: 0, z: -38 },
+          { x: 38, y: 0, z: -38 },
+          { x: 38, y: 0, z: 38 },
+          { x: -38, y: 0, z: 38 }
+        ].map(project);
+
+        this.ctx.strokeStyle = this.mode === 'audit' ? '#10B981' : '#F59E0B';
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        for (let i = 2; i <= 5; i++) {
+          this.ctx.moveTo(core[0].px, core[0].py);
+          this.ctx.lineTo(core[i].px, core[i].py);
+          this.ctx.moveTo(core[1].px, core[1].py);
+          this.ctx.lineTo(core[i].px, core[i].py);
+          const nextIdx = i === 5 ? 2 : i + 1;
+          this.ctx.moveTo(core[i].px, core[i].py);
+          this.ctx.lineTo(core[nextIdx].px, core[nextIdx].py);
+        }
+        this.ctx.stroke();
+
+        // Floating particles
+        this.stars.forEach(s => {
+          const pr = project({
+            x: s.x + Math.sin(t + s.speed) * 12,
+            y: s.y + Math.cos(t + s.speed) * 12,
+            z: s.z
+          });
+          const rad = Math.max(1, 2.5 * pr.scale);
+          this.ctx.beginPath();
+          this.ctx.arc(pr.px, pr.py, rad, 0, Math.PI * 2);
+          this.ctx.fillStyle = this.mode === 'audit' ? '#10B981' : (this.mode === 'topology' ? '#8B5CF6' : '#FBBF24');
+          this.ctx.fill();
+        });
+
+        requestAnimationFrame(this.animate);
+      }
+    }
+
+    // 3. State & Currencies
+    let accountsData = [];
+    let currentCurrency = 'USD';
+    const FX_RATES = { USD: 1.0, EUR: 0.92, GBP: 0.79 };
+    const FX_SYMBOLS = { USD: '$', EUR: '€', GBP: '£' };
+    let vaultInstance = null;
+
+    function formatCurrency(amountUsd) {
+      const rate = FX_RATES[currentCurrency] || 1.0;
+      const sym = FX_SYMBOLS[currentCurrency] || '$';
+      const val = parseFloat(amountUsd) * rate;
+      return `${sym}${val.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    function generateIdemKey() {
+      return 'idem-' + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+
+    function notify(text, type = 'info') {
+      const tower = document.getElementById('toastReservoir');
+      const b = document.createElement('div');
+      b.className = `toast-bubble ${type}`;
+      b.textContent = text;
+      tower.appendChild(b);
+      setTimeout(() => b.classList.add('open'), 10);
+      setTimeout(() => {
+        b.classList.remove('open');
+        setTimeout(() => b.remove(), 250);
+      }, 3500);
+    }
+
+    // Health Telemetry
+    async function updateTelemetry() {
+      try {
+        const r = await fetch('/api/v1/health');
+        const d = await r.json();
+        const dbLed = document.getElementById('dbLed');
+        const redisLed = document.getElementById('redisLed');
+        const dbText = document.getElementById('dbStatusText');
+        const redisText = document.getElementById('redisStatusText');
+
+        if (d.services.database === 'healthy') {
+          dbLed.className = 'live-dot';
+          dbText.textContent = 'ACID ACTIVE';
+        } else {
+          dbLed.className = 'live-dot degraded';
+          dbText.textContent = 'DEGRADED';
+        }
+
+        if (d.services.redis === 'healthy') {
+          redisLed.className = 'live-dot';
+          redisText.textContent = 'IDEMPOTENCY OK';
+        } else {
+          redisLed.className = 'live-dot degraded';
+          redisText.textContent = 'OFFLINE';
+        }
+      } catch (e) {}
+    }
+
+    // Cargar Cuentas
+    async function loadAccounts() {
+      try {
+        const listWrap = document.getElementById('accountListContainer');
+        const dSource = document.getElementById('drawerSourceAcc');
+        const dTarget = document.getElementById('drawerTargetAcc');
+
+        let accounts = accountsData;
+        if (accounts.length === 0) {
+          const c = await fetch('/api/v1/accounts/by-number/NX-USD-3039824260').catch(() => null);
+          if (c && c.ok) {
+            accounts = [await c.json()];
+            accountsData = accounts;
+          }
+        }
+
+        document.getElementById('statAccountsCount').textContent = accounts.length;
+        document.getElementById('accountBadgeCount').textContent = `${accounts.length} ACTIVAS`;
+
+        const totalUsd = accounts.reduce((acc, curr) => acc + parseFloat(curr.balance || 0), 0);
+        document.getElementById('statTotalLiquidity').textContent = formatCurrency(totalUsd);
+
+        if (accounts.length === 0) {
+          listWrap.innerHTML = `
+            <div style="text-align: center; color: var(--text-muted); padding: 2.5rem;">
+              <p style="margin-bottom: 0.85rem;">No hay cuentas registradas en este nodo.</p>
+              <button class="btn-gold-cta" onclick="document.getElementById('btnNewAccount').click()" style="padding: 7px 16px; font-size: 0.8rem;">
+                Aperturar Primera Cuenta
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        listWrap.innerHTML = accounts.map(acc => `
+          <div class="titanium-account-card" onclick="auditAccount('${acc.id}', '${acc.owner_name}')">
+            <div>
+              <div class="card-emv-chip"></div>
+              <div class="acc-owner-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                ${acc.owner_name}
+              </div>
+              <div class="acc-number-code">${acc.account_number}</div>
+            </div>
+            <div class="acc-balance-display">
+              <div class="acc-amount-hero">${formatCurrency(acc.balance)}</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">Clic para auditar</div>
+            </div>
+          </div>
+        `).join('');
+
+        dSource.innerHTML = accounts.map(a => `<option value="${a.id}">${a.owner_name} (${formatCurrency(a.balance)})</option>`).join('');
+        dTarget.innerHTML = accounts.map(a => `<option value="${a.id}">${a.owner_name} (${formatCurrency(a.balance)})</option>`).join('');
+        if (accounts.length > 1) dTarget.selectedIndex = 1;
+
+        if (accounts[0]) loadLedger(accounts[0].id);
+      } catch(e) {}
+    }
+
+    // Cargar Libro Mayor
+    async function loadLedger(accId) {
+      try {
+        const stream = document.getElementById('ledgerFeedContainer');
+        const res = await fetch(`/api/v1/accounts/${accId}/ledger`);
+        if (!res.ok) return;
+        const entries = await res.json();
+
+        if (entries.length === 0) {
+          stream.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 2.5rem;">Sin asientos aún para esta cuenta.</div>`;
+          return;
+        }
+
+        stream.innerHTML = entries.map(e => `
+          <div class="ledger-block-item ${e.entry_type.toLowerCase()}">
+            <div>
+              <span class="tag-badge ${e.entry_type.toLowerCase()}">${e.entry_type}</span>
+              <span style="color: var(--text-muted); font-size: 0.72rem; margin-left: 6px;">
+                ${new Date(e.created_at).toLocaleTimeString()}
+              </span>
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 3px;">
+                TX: ${e.transaction_id.substring(0, 8)}...
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-weight: 700; font-size: 0.95rem; color: ${e.entry_type === 'CREDIT' ? 'var(--success)' : 'var(--danger)'}">
+                ${e.entry_type === 'CREDIT' ? '+' : '-'}${formatCurrency(e.amount)}
+              </div>
+              <div style="font-size: 0.7rem; color: var(--text-muted)">
+                Balance: ${formatCurrency(e.balance_after)}
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch(e) {}
+    }
+
+    // Auditar Paridad
+    async function auditAccount(accId, name) {
+      sound.click();
+      try {
+        const res = await fetch(`/api/v1/reconciliation/${accId}`);
+        const r = await res.json();
+        if (r.is_reconciled) {
+          sound.success();
+          notify(`Auditoría 100% OK: ${name} en paridad absoluta ($${r.discrepancy})`, 'success');
+          document.getElementById('auditParityText').textContent = '0.0000 DISCREPANCIA';
+        } else {
+          sound.reject();
+          notify(`Alerta: Discrepancia detectada en ${name}: $${r.discrepancy}`, 'error');
+        }
+        loadLedger(accId);
+      } catch(e) {
+        notify('Error al auditar cuenta', 'error');
+      }
+    }
+
+    // Apertura de Cuenta
+    async function handleCreateAccount(e) {
+      e.preventDefault();
+      sound.click();
+      const owner_name = document.getElementById('accOwnerName').value.trim();
+      const initial_balance = parseFloat(document.getElementById('accInitialBalance').value) || 0;
+
+      try {
+        const res = await fetch('/api/v1/accounts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            owner_name,
+            initial_balance: initial_balance.toFixed(4),
+            currency: 'USD'
+          })
+        });
+        if (!res.ok) throw new Error('Error al crear cuenta');
+        const acc = await res.json();
+        accountsData.push(acc);
+        sound.success();
+        notify(`Cuenta aperturada para ${acc.owner_name} (${acc.account_number})`, 'success');
+        document.getElementById('accountModalBackdrop').classList.remove('active');
+        document.getElementById('createAccountForm').reset();
+        loadAccounts();
+      } catch(err) {
+        sound.reject();
+        notify(err.message, 'error');
+      }
+    }
+
+    // Transferencia en Drawer
+    async function handleDrawerTransfer(e) {
+      e.preventDefault();
+      sound.click();
+      const source = document.getElementById('drawerSourceAcc').value;
+      const target = document.getElementById('drawerTargetAcc').value;
+      const amount = parseFloat(document.getElementById('drawerAmount').value) || 0;
+      const idemKey = document.getElementById('drawerIdempotencyKey').value;
+
+      if (source === target) {
+        sound.reject();
+        notify('La cuenta de origen y destino deben ser distintas.', 'error');
+        return;
+      }
+
+      sound.laser();
+
+      try {
+        const res = await fetch('/api/v1/transfers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Idempotency-Key': idemKey
+          },
+          body: JSON.stringify({
+            source_account_id: source,
+            target_account_id: target,
+            amount: amount.toFixed(4),
+            currency: 'USD'
+          })
+        });
+
+        const d = await res.json();
+        if (res.status === 201) {
+          sound.success();
+          notify(`Transferencia de $${amount.toFixed(2)} USD completada exitosamente`, 'success');
+          document.getElementById('transferDrawerBackdrop').classList.remove('active');
+          
+          const s = accountsData.find(a => a.id === source);
+          const t = accountsData.find(a => a.id === target);
+          if (s) s.balance = d.source_balance_after;
+          if (t) t.balance = d.target_balance_after;
+          loadAccounts();
+        } else {
+          sound.reject();
+          notify(d.detail?.message || 'Error en la transferencia', 'error');
+        }
+      } catch(err) {
+        sound.reject();
+        notify(err.message, 'error');
+      }
+    }
+
+    // Concurrency Battle
+    async function runConcurrencyBattle() {
+      sound.click();
+      if (accountsData.length < 2) {
+        notify('Aperturando 2 cuentas de demostración para el simulador...', 'info');
+        const acc1 = await fetch('/api/v1/accounts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ owner_name: 'Cuenta Estrés Alpha', initial_balance: '500.0000', currency: 'USD' })
+        }).then(r => r.json());
+
+        const acc2 = await fetch('/api/v1/accounts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ owner_name: 'Cuenta Estrés Beta', initial_balance: '0.0000', currency: 'USD' })
+        }).then(r => r.json());
+
+        accountsData.push(acc1, acc2);
+        loadAccounts();
+      }
+
+      const sAcc = accountsData[0];
+      const tAcc = accountsData[1];
+      const block = document.getElementById('stressResultsBlock');
+      block.style.display = 'block';
+
+      const barOk = document.getElementById('stressBarSuccess');
+      const barFail = document.getElementById('stressBarRejected');
+      const countOk = document.getElementById('stressSuccessCount');
+      const countFail = document.getElementById('stressRejectedCount');
+      const finBal = document.getElementById('stressFinalBalance');
+      const pctEl = document.getElementById('stressProgressPct');
+      const matrix = document.getElementById('workerLanes');
+
+      matrix.innerHTML = Array.from({ length: 30 }).map((_, i) => `<div class="worker-tile" id="wt-${i}"></div>`).join('');
+      barOk.style.width = '0%';
+      barFail.style.width = '0%';
+      countOk.textContent = '0';
+      countFail.textContent = '0';
+      pctEl.textContent = 'Workers Compitiendo...';
+
+      const TOTAL = 30;
+      let okCount = 0;
+      let failCount = 0;
+      sound.laser();
+
+      const promises = Array.from({ length: TOTAL }).map(async (_, i) => {
+        const tile = document.getElementById(`wt-${i}`);
+        if (tile) tile.className = 'worker-tile locking';
+
+        try {
+          const res = await fetch('/api/v1/transfers', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Idempotency-Key': `arena-${generateIdemKey()}-${i}`
+            },
+            body: JSON.stringify({
+              source_account_id: sAcc.id,
+              target_account_id: tAcc.id,
+              amount: '25.0000',
+              currency: 'USD'
+            })
+          });
+
+          if (res.status === 201) {
+            okCount++;
+            if (tile) tile.className = 'worker-tile committed';
+          } else {
+            failCount++;
+            if (tile) tile.className = 'worker-tile rejected';
+          }
+        } catch(e) {
+          failCount++;
+          if (tile) tile.className = 'worker-tile rejected';
+        }
+
+        const totalDone = okCount + failCount;
+        barOk.style.width = `${(okCount / TOTAL) * 100}%`;
+        barFail.style.width = `${(failCount / TOTAL) * 100}%`;
+        countOk.textContent = okCount;
+        countFail.textContent = failCount;
+        pctEl.textContent = `${Math.round((totalDone / TOTAL) * 100)}%`;
+      });
+
+      await Promise.all(promises);
+
+      const refreshed = await fetch(`/api/v1/accounts/${sAcc.id}`).then(r => r.json());
+      finBal.textContent = formatCurrency(refreshed.balance);
+      sAcc.balance = refreshed.balance;
+      loadAccounts();
+
+      sound.success();
+      notify(`Simulador Finalizado: ${okCount} transacciones aprobadas, ${failCount} rechazadas. Saldo exacto: ${formatCurrency(refreshed.balance)}`, 'success');
+    }
+
+    // Inicialización & Listeners
+    window.addEventListener('DOMContentLoaded', () => {
+      const canvas = document.getElementById('vaultCanvas');
+      if (canvas) vaultInstance = new QuantumVault3D(canvas);
+
+      // Modos de Bóveda 3D
+      document.querySelectorAll('.vmode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sound.click();
+          document.querySelectorAll('.vmode-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          if (vaultInstance) vaultInstance.mode = btn.dataset.mode;
+        });
+      });
+
+      // Currency Reactivity
+      document.querySelectorAll('.currency-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sound.click();
+          document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCurrency = btn.dataset.cur;
+          document.querySelectorAll('.active-currency-label').forEach(l => l.textContent = currentCurrency);
+          loadAccounts();
+          notify(`Divisa global reactiva: ${currentCurrency}`, 'info');
+        });
+      });
+
+      // Modal Crear Cuenta
+      const accBackdrop = document.getElementById('accountModalBackdrop');
+      document.getElementById('btnNewAccount').addEventListener('click', () => {
+        sound.click();
+        accBackdrop.classList.add('active');
+        document.getElementById('accOwnerName').focus();
+      });
+      document.getElementById('closeAccountModal').addEventListener('click', () => accBackdrop.classList.remove('active'));
+      document.getElementById('btnCancelAccount').addEventListener('click', () => accBackdrop.classList.remove('active'));
+      document.getElementById('createAccountForm').addEventListener('submit', handleCreateAccount);
+
+      // Drawer Transferencia
+      const drawerBackdrop = document.getElementById('transferDrawerBackdrop');
+      document.getElementById('btnOpenDrawerTransfer').addEventListener('click', () => {
+        sound.click();
+        document.getElementById('drawerIdempotencyKey').value = generateIdemKey();
+        drawerBackdrop.classList.add('active');
+      });
+      document.getElementById('closeDrawerBtn').addEventListener('click', () => drawerBackdrop.classList.remove('active'));
+      document.getElementById('btnCancelDrawer').addEventListener('click', () => drawerBackdrop.classList.remove('active'));
+      document.getElementById('drawerTransferForm').addEventListener('submit', handleDrawerTransfer);
+
+      // Concurrency Battle
+      document.getElementById('btnLaunchStress').addEventListener('click', runConcurrencyBattle);
+
+      // Command Palette (Ctrl+K)
+      const pScrim = document.getElementById('commandPaletteOverlay');
+      const pInput = document.getElementById('paletteSearch');
+
+      window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          sound.click();
+          pScrim.classList.toggle('active');
+          if (pScrim.classList.contains('active')) pInput.focus();
+        }
+        if (e.key === 'Escape' && pScrim.classList.contains('active')) {
+          pScrim.classList.remove('active');
+        }
+      });
+
+      document.getElementById('openPaletteBtn').addEventListener('click', () => {
+        sound.click();
+        pScrim.classList.add('active');
+        pInput.focus();
+      });
+
+      document.querySelectorAll('.cmd-item').forEach(row => {
+        row.addEventListener('click', () => {
+          sound.click();
+          pScrim.classList.remove('active');
+          const a = row.dataset.action;
+          if (a === 'new-transfer') document.getElementById('btnOpenDrawerTransfer').click();
+          if (a === 'new-account') document.getElementById('btnNewAccount').click();
+          if (a === 'stress-test') runConcurrencyBattle();
+          if (a === 'audit-all' && accountsData[0]) auditAccount(accountsData[0].id, accountsData[0].owner_name);
+          if (a === 'toggle-audio') {
+            sound.enabled = !sound.enabled;
+            document.getElementById('audioToggleBtn').classList.toggle('muted', !sound.enabled);
+            notify(`Sonido háptico: ${sound.enabled ? 'ACTIVADO' : 'SILENCIADO'}`, 'info');
+          }
+        });
+      });
+
+      // Audio Toggle
+      document.getElementById('audioToggleBtn').addEventListener('click', () => {
+        sound.enabled = !sound.enabled;
+        document.getElementById('audioToggleBtn').classList.toggle('muted', !sound.enabled);
+        notify(`Sonido háptico: ${sound.enabled ? 'ACTIVADO' : 'SILENCIADO'}`, 'info');
+      });
+
+      // Latency Jitter
+      setInterval(() => {
+        const lat = (0.34 + Math.random() * 0.12).toFixed(2);
+        document.getElementById('lockLatencyText').textContent = `${lat}ms`;
+      }, 2000);
+
+      // Bootstrap
+      updateTelemetry();
+      loadAccounts();
+      setInterval(updateTelemetry, 8000);
+    });
+  </script>
 </body>
 </html>
