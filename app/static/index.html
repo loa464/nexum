@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexum — Financial Ledger Mission Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- Top Realtime HUD Header -->
+  <header class="hud-header">
+    <div class="brand-block">
+      <div class="brand-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#070B14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+          <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+          <line x1="6" y1="6" x2="6.01" y2="6"></line>
+          <line x1="6" y1="18" x2="6.01" y2="18"></line>
+        </svg>
+      </div>
+      <h1 class="brand-title">Nexum</h1>
+      <span class="brand-badge">CORE v1.0.0</span>
+    </div>
+
+    <!-- HUD Telemetry Nodes -->
+    <div class="hud-telemetry">
+      <div class="telemetry-node">
+        <div class="status-led" id="dbLed"></div>
+        <span>POSTGRES: <strong id="dbStatusText">CONNECTING</strong></span>
+      </div>
+      <div class="telemetry-node">
+        <div class="status-led" id="redisLed"></div>
+        <span>REDIS: <strong id="redisStatusText">CONNECTING</strong></span>
+      </div>
+      <div class="telemetry-node">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span>AUDITORÍA: <strong id="auditParityText">0.0000 DISCREPANCIA</strong></span>
+      </div>
+    </div>
+
+    <!-- Actions & Controls -->
+    <div class="hud-actions">
+      <button class="btn-command" id="openPaletteBtn" title="Paleta de Comandos (Ctrl+K)">
+        <span>Buscar / Acciones</span>
+        <span class="kbd-chip">Ctrl K</span>
+      </button>
+
+      <button class="btn-icon" id="audioToggleBtn" title="Sonido Háptico (Web Audio API)">
+        <svg id="audioIconOn" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+      </button>
+
+      <a href="/docs" target="_blank" class="btn-icon" title="Swagger API OpenAPI">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="dashboard-container">
+
+    <!-- Hero & 3D Spatial Stage -->
+    <section class="spatial-hero-grid">
+      <!-- Mission Briefing -->
+      <div class="hero-card">
+        <div>
+          <div class="hero-pretitle">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            Motor Financiero ACID de Doble Partida
+          </div>
+          <h2 class="hero-title">Gestión Contable <span>Inmutable y Atómica</span></h2>
+          <p class="hero-desc">
+            Nexum procesa transacciones bancarias concurrentes eliminando el doble gasto mediante ordenamiento determinista de bloqueos pesimistas en PostgreSQL y validación de idempotencia distribuida en Redis.
+          </p>
+        </div>
+
+        <div class="hero-stat-row">
+          <div>
+            <div class="stat-item-label">TOTAL CUENTAS</div>
+            <div class="stat-item-value" id="statAccountsCount">0</div>
+          </div>
+          <div>
+            <div class="stat-item-label">LIQUIDEZ TOTAL</div>
+            <div class="stat-item-value" id="statTotalLiquidity">$0.00</div>
+          </div>
+          <div>
+            <div class="stat-item-label">CONCILIACIÓN</div>
+            <div class="stat-item-value" style="color: var(--color-success)">100% ACID</div>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn-primary" id="btnNewAccount">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Nueva Cuenta
+          </button>
+          <button class="btn-secondary" id="btnNewTransfer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+            Transferir Fondos
+          </button>
+        </div>
+      </div>
+
+      <!-- 3D Spatial Canvas Stage -->
+      <div class="spatial-stage-card">
+        <div class="spatial-header">
+          <span>TOPOLOGÍA DE SEGURIDAD 3D</span>
+          <div class="spatial-mode-pills">
+            <button class="mode-pill active" data-mode="vault">BÓVEDA</button>
+            <button class="mode-pill" data-mode="matrix">MATRIZ</button>
+            <button class="mode-pill" data-mode="audit">AUDIT</button>
+          </div>
+        </div>
+        <canvas id="vaultCanvas"></canvas>
+        <div class="spatial-footer">
+          <span>INTERACCIÓN: MOVER RATÓN</span>
+          <span id="vaultStats">ESTADO: INMUTABLE</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Grid: Accounts & Concurrency Tester VS Live Ledger Feed -->
+    <section class="core-dashboard-grid">
+
+      <!-- Left Column: Cuentas y Test de Estrés Concurrente -->
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        
+        <!-- Panel Cuentas -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                <line x1="2" y1="10" x2="22" y2="10"></line>
+              </svg>
+              Cuentas en Custodia
+            </h3>
+            <span class="brand-badge" id="accountBadgeCount">0 ACTIVAS</span>
+          </div>
+          <div class="panel-body">
+            <div class="account-list" id="accountListContainer">
+              <!-- Render dinámico de cuentas -->
+              <div style="text-align: center; color: var(--color-text-muted); padding: 2rem;">
+                Cargando cuentas contables...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel de Test de Estrés de Concurrencia -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h3 class="panel-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              Simulador de Concurrencia Extrema
+            </h3>
+            <span class="brand-badge" style="color: var(--color-accent); border-color: var(--color-accent)">ANTI-DOUBLE SPEND</span>
+          </div>
+          <div class="panel-body">
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+              Dispara <strong>30 transferencias simultáneas</strong> desde una cuenta con saldo limitado hacia otra. Comprueba en tiempo real cómo PostgreSQL y Redis rechazan exactamente el exceso sin balance negativo.
+            </p>
+
+            <button class="btn-primary" id="btnLaunchStress" style="width: 100%; justify-content: center; background: linear-gradient(135deg, var(--color-primary), #B45309)">
+              Disparar 30 Peticiones Concurrentes
+            </button>
+
+            <div class="stress-panel" id="stressResultsBlock" style="display: none;">
+              <div class="stress-header">
+                <span style="font-size: 0.8rem; font-family: var(--font-mono)">PROGRESO DE BATCH</span>
+                <span style="font-size: 0.8rem; font-family: var(--font-mono); color: var(--color-primary)" id="stressProgressPct">0%</span>
+              </div>
+              <div class="stress-progress-bar">
+                <div class="progress-fill-success" id="stressBarSuccess"></div>
+                <div class="progress-fill-rejected" id="stressBarRejected"></div>
+              </div>
+              <div class="stress-metrics">
+                <span style="color: var(--color-success)">ÉXITOS: <strong id="stressSuccessCount">0</strong></span>
+                <span style="color: var(--color-danger)">RECHAZOS (FONDO INSUF.): <strong id="stressRejectedCount">0</strong></span>
+                <span style="color: var(--color-text)">SALDO FINAL: <strong id="stressFinalBalance">$0.00</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Libro Mayor de Doble Partida (Live Stream) -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <h3 class="panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            Libro Mayor en Vivo (Double-Entry Ledger)
+          </h3>
+          <button class="btn-command" id="btnAuditAll" style="padding: 4px 8px;">
+            Auditar Paridad
+          </button>
+        </div>
+        <div class="panel-body">
+          <div class="ledger-feed" id="ledgerFeedContainer">
+            <!-- Render de asientos contables -->
+            <div style="text-align: center; color: var(--color-text-muted); padding: 2rem;">
+              Cargando historial del libro mayor...
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Modal: Crear Cuenta -->
+  <div class="modal-overlay" id="accountModal">
+    <div class="modal-content">
+      <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--color-text);">Apertura de Cuenta Contable</h3>
+      <form id="createAccountForm">
+        <div class="form-group">
+          <label class="form-label" for="accOwnerName">NOMBRE DEL TITULAR</label>
+          <input class="form-input" id="accOwnerName" type="text" placeholder="Ej. Carlos Mendoza" required minlength="2">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="accInitialBalance">DEPÓSITO INICIAL (USD)</label>
+          <input class="form-input" id="accInitialBalance" type="number" step="0.01" min="0" value="500.00" required>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn-secondary" id="closeAccountModal">Cancelar</button>
+          <button type="submit" class="btn-primary">Registrar Cuenta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Ejecutar Transferencia con Idempotencia -->
+  <div class="modal-overlay" id="transferModal">
+    <div class="modal-content">
+      <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--color-text);">Transferencia Atómica ACID</h3>
+      <form id="transferForm">
+        <div class="form-group">
+          <label class="form-label" for="transferSource">CUENTA DE ORIGEN (DÉBITO)</label>
+          <select class="form-select" id="transferSource" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="transferTarget">CUENTA DE DESTINO (CRÉDITO)</label>
+          <select class="form-select" id="transferTarget" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="transferAmount">MONTO (USD)</label>
+          <input class="form-input" id="transferAmount" type="number" step="0.01" min="0.01" value="50.00" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CLAVE DE IDEMPOTENCIA (X-Idempotency-Key)</label>
+          <input class="form-input" id="transferIdempotencyKey" type="text" readonly style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-primary)">
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn-secondary" id="closeTransferModal">Cancelar</button>
+          <button type="submit" class="btn-primary">Ejecutar Transferencia</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Command Palette (Ctrl+K) -->
+  <div class="modal-overlay" id="commandPaletteModal">
+    <div class="modal-content palette-modal">
+      <div class="palette-input-wrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input class="palette-input" id="paletteInput" type="text" placeholder="Escribe un comando o busca...">
+        <span class="kbd-chip">ESC</span>
+      </div>
+      <div class="palette-results" id="paletteResults">
+        <div class="palette-action" data-action="new-account">
+          <span>Abrir nueva cuenta contable</span>
+          <span class="kbd-chip">A</span>
+        </div>
+        <div class="palette-action" data-action="new-transfer">
+          <span>Realizar transferencia de fondos</span>
+          <span class="kbd-chip">T</span>
+        </div>
+        <div class="palette-action" data-action="stress-test">
+          <span>Disparar test de estrés (30 txs)</span>
+          <span class="kbd-chip">S</span>
+        </div>
+        <div class="palette-action" data-action="audit-all">
+          <span>Verificar paridad y conciliar libro mayor</span>
+          <span class="kbd-chip">R</span>
+        </div>
+        <div class="palette-action" data-action="toggle-audio">
+          <span>Alternar sonido háptico Web Audio</span>
+          <span class="kbd-chip">M</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Stack -->
+  <div class="toast-stack" id="toastStack"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

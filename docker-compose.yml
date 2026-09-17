@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nexum-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nexum_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - nexum_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nexum_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: nexum-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - nexum_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nexum-api
+    restart: unless-stopped
+    environment:
+      APP_NAME: "Nexum Ledger Core"
+      APP_VERSION: "1.0.0"
+      APP_ENV: "production"
+      DEBUG: "false"
+      DB_HOST: "postgres"
+      DB_PORT: 5432
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
+      DB_NAME: "nexum_db"
+      REDIS_HOST: "redis"
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      IDEMPOTENCY_EXPIRATION_SECONDS: 86400
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  nexum_pgdata:
+  nexum_redisdata:
