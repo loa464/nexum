@@ -6,10 +6,10 @@
 [![Redis 7](https://img.shields.io/badge/Redis-7-DC382D.svg)](https://redis.io/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg)](https://www.docker.com/)
 [![ACID Compliant](https://img.shields.io/badge/Transactions-ACID-success.svg)]()
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Online-success.svg)](https://stylus-complete-supreme-lovers.trycloudflare.com)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Online-success.svg)](https://excel-well-rough-stadium.trycloudflare.com)
 
-> **Demo Pública Activa**: [https://stylus-complete-supreme-lovers.trycloudflare.com](https://stylus-complete-supreme-lovers.trycloudflare.com)  
-> **Swagger API Docs**: [https://stylus-complete-supreme-lovers.trycloudflare.com/docs](https://stylus-complete-supreme-lovers.trycloudflare.com/docs)
+> **Demo Pública Activa**: [https://excel-well-rough-stadium.trycloudflare.com](https://excel-well-rough-stadium.trycloudflare.com)  
+> **Swagger API Docs**: [https://excel-well-rough-stadium.trycloudflare.com/docs](https://excel-well-rough-stadium.trycloudflare.com/docs)
 
 > **Nexum** es un motor contable de libro mayor de doble partida (*Double-Entry Bookkeeping*) diseñado para entornos fintech de misión crítica y alta concurrencia. Garantiza consistencia matemática absoluta, cero balance negativo mediante restricciones CHECK a nivel de hardware/kernel de PostgreSQL, prevención determinista de *deadlocks* cruzados y protección contra doble gasto mediante idempotencia distribuida en Redis.
 
